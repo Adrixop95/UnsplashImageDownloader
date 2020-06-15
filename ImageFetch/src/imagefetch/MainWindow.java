@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -98,21 +100,21 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ResolutionBox, 0, 244, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(FileExtension, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(NumberOfFiles)
                                     .addComponent(FileLocation))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(FilePath)
-                                    .addComponent(FileNumber))))
+                                    .addComponent(FileNumber)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ResolutionBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(FileExtension, 0, 244, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(FileChooser)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -153,7 +155,7 @@ public class MainWindow extends javax.swing.JFrame {
         int GetNumberFromField = Integer.parseInt(FileNumber.getText());
         
         String resolution = String.valueOf(ResolutionBox.getSelectedItem());
-        
+                
         for (int i = 0; i < GetNumberFromField; i++){
             
             String filename = i + String.valueOf(FileExtension.getSelectedItem());
@@ -168,12 +170,16 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void FileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileChooserActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("choosertitle");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
 
-        File f = chooser.getCurrentDirectory();
-        String filepath = (f.getAbsolutePath() + '\\' );
-        FilePath.setText(filepath);
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            String filepath = (f.getAbsolutePath() + '\\' );
+            FilePath.setText(filepath);
+        }        
     }//GEN-LAST:event_FileChooserActionPerformed
 
     /**
